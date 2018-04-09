@@ -1,0 +1,21 @@
+.board-class {
+    background-color: red;
+    min-width: 200px !important;
+    min-height: 150px !important;
+}
+
+.left-class {
+    background-color: blueviolet;
+    min-width: 100px !important;
+    min-height: 250px !important;
+}
+
+.bottom-class {
+    background-color: green;
+    min-width: 100px !important;
+    min-height: 100px !important;
+}
+
+.dice {
+    font-size: 200%
+}
