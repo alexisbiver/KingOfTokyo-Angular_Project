@@ -1,5 +1,47 @@
 var app = angular.module("GameApp", []);
 
+app.controller("left", function($scope) {
+    $scope.players = [
+        {
+          "name" : "Dragon",
+          "emoji": "🐉",
+          "life": 10,
+          "points": 0,
+        },
+        {
+          "name" : "Dinosaur",
+          "emoji": "🦖",
+          "life": 10,
+          "points": 0,
+        },
+        {
+          "name" : "Boar",
+          "emoji": "🐗",
+          "life": 10,
+          "points": 0,
+        },
+        {
+          "name" : "Gorilla",
+          "emoji": "🦍",
+          "life": 10,
+          "points": 0,
+        },
+        {
+          "name" : "Rhinoceros",
+          "emoji": "🦏",
+          "life": 10,
+          "points": 0,
+        },
+        {
+          "name" : "Buffalo",
+          "emoji": "🐃",
+          "life": 10,
+          "points": 0,
+        },
+
+    ];
+}
+
 app.controller("bottom", function($scope) {
     $scope.dicesFaces = ["1️⃣", "2️⃣", "3️⃣", "👊", "💵", "❤️"];
 
