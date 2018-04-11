@@ -57,6 +57,10 @@ app.controller("bottom", function($scope) {
 
     $scope.roll = function() {
         if ($scope.nbRolls < 3) {
+            $scope.dices.forEach(d => {
+                console.log(d)
+                d.face = "2️⃣"
+            });
 
         }
     };

@@ -2,12 +2,11 @@
     background-color: red;
     min-width: 200px !important;
     min-height: 150px !important;
-    position: absolute !important;
     font-size: 200%
 }
 
 .left-class {
-    background-color: blueviolet;
+    background-color: violet;
     min-width: 100px !important;
     min-height: 250px !important;
 }
