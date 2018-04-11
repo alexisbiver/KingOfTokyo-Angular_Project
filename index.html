@@ -17,32 +17,36 @@
 </head>
 
 <body ng-app="GameApp">
-    <div id="game"></div>
-    <div class="row"></div>
-    <div id="left" ng-controller="left" class="left-class col-md-4">
-        <ul ng-repeat="x in players">
-            <li> {{x.emoji + " : " + x.name}} </li>
-            <li> {{x.life}} </li>
-            <li> {{x.points}} </li>
-        </ul>
-    </div>
-
-    <div class="right-class col-md-8">
-
-        <div id="board" class="board-class col-md-12">
-            🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢
-            🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢
-        </div>
-
-        <div id="bottom" ng-controller="bottom" class="bottom-class">
-            <div class="dices col-md-9">
-                <div class="dice col-md-2" ng-repeat="x in dices">
-                    {{x.face}}
+    <div id="game" ng-controller="game">
+        <div class="row"></div>
+        <div id="left" ng-controller="left" class="left-class col-md-4">
+            <div ng-repeat="x in players">
+                <div class="player row">
+                    <div class="col-md-4 playerEmoji">{{x.emoji}}</div>
+                    <ul class="col-md-8">
+                        <li> {{x.name}} </li>
+                        <li> life : {{x.life}}</li>
+                        <li> points : {{x.points}}</li>
+                    </ul>
                 </div>
             </div>
-            <button type="button col-md-2" class="btn btn-success">Roll</button>
-            <button type="button col-md-1" class="btn btn-danger">End Turn</button>
+        </div>
 
+        <div class="right-class col-md-8">
+            <div id="board" ng-controller="board" class="board-class row">
+                {{StringBoard}}
+            </div>
+
+            <div id="bottom" ng-controller="bottom" class="bottom-class row">
+                <div class="dices col-md-9">
+                    <div class="dice col-md-2 locked-{{x.locked}}" ng-repeat="x in dices" ng-click="lock(x)">
+                        {{x.face}}
+                    </div>
+                </div>
+                <button type=" button col-md-2 " class="btn btn-success " ng-click="roll() "> {{nbRolls}} Roll</button>
+                <button type="button col-md-1 " class="btn btn-danger ">End Turn</button>
+
+            </div>
         </div>
     </div>
 </body>

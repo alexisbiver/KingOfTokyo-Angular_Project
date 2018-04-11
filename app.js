@@ -1,6 +1,6 @@
 var app = angular.module("GameApp", []);
 
-app.controller("left", function($scope) {
+app.controller("game", function($scope) {
     $scope.players = [{
             "name": "Dragon",
             "emoji": "🐉",
@@ -37,10 +37,27 @@ app.controller("left", function($scope) {
             "life": 10,
             "points": 0,
         },
-
     ];
+    $scope.playerInTokyo = null;
+    $scope.currentPlayer = 0;
+    $scope.nbPlayers = 6;
+
+    $scope.changePlayerTurn = function() {
+        if ($scope.currentPlayer == $scope.nbPlayers - 1) {
+            $scope.currentPlayer = 0
+        } else {
+            $scope.currentPlayer += 1
+        }
+    }
 })
 
+app.controller("left", function($scope) {})
+
+app.controller("board", function($scope) {
+
+    $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
+
+});
 app.controller("bottom", function($scope) {
     $scope.dicesFaces = ["1️⃣", "2️⃣", "3️⃣", "👊", "💵", "❤️"];
 
@@ -53,15 +70,26 @@ app.controller("bottom", function($scope) {
         { "face": "❤️", "locked": false }
     ];
 
-    $scope.nbRolls = 0;
+    $scope.nbRolls = 3;
 
     $scope.roll = function() {
-        if ($scope.nbRolls < 3) {
+        if ($scope.nbRolls > 0) {
             $scope.dices.forEach(d => {
-                console.log(d)
-                d.face = "2️⃣"
+                if (!d.locked) {
+                    d.face = $scope.dicesFaces[Math.floor(Math.random() * 6)];
+                }
             });
-
+            $scope.nbRolls -= 1;
         }
     };
+
+    $scope.lock = function(d) {
+        if (d.locked) {
+            d.locked = false
+        } else {
+            d.locked = true
+        }
+    }
+
+
 });
