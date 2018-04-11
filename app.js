@@ -1,5 +1,7 @@
 var app = angular.module("GameApp", []);
 
+monsterEmotes = ["🐦", "🕷", "🦖", "🐙", "🦍", "🐉", "🦈"]
+
 app.controller("bottom", function($scope) {
     $scope.dicesFaces = ["1️⃣", "2️⃣", "3️⃣", "👊", "💵", "❤️"];
 
