@@ -25,8 +25,8 @@
                     <div class="col-md-4 playerEmoji">{{x.emoji}}</div>
                     <ul class="col-md-8">
                         <li> {{x.name}} </li>
-                        <li> life : {{x.life}}</li>
-                        <li> points : {{x.points}}</li>
+                        <li> ❤️ : {{x.life}}</li>
+                        <li> Points : {{x.points}}</li>
                     </ul>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <button type=" button col-md-2 " class="btn btn-success " ng-click="roll() "> {{nbRolls}} Roll</button>
-                <button type="button col-md-1 " class="btn btn-danger ">End Turn</button>
+                <button type="button col-md-1 " class="btn btn-danger " ng-click="changePlayerTurn() ">End Turn</button>
 
             </div>
         </div>

@@ -12,6 +12,10 @@
     min-height: 250px !important;
 }
 
+ul{
+    list-style:none;
+}
+
 .bottom-class {
     background-color: lightgreen;
     border: solid 1px black;
@@ -41,6 +45,14 @@
 
 .locked-false {
     background-color: green;
+}
+
+.playing-true {
+    background-color: white;
+}
+
+.playing-false {
+    background-color: violet;
 }
 
 .player {
