@@ -20,7 +20,11 @@
     <div id="game"></div>
     <div class="row"></div>
     <div id="left" class="left-class col-md-4">
-        LEFT
+        <ul ng-repeat="x in players"> 
+            <li> {{x.emoji + " : " + x.name}} </li>
+            <li> {{x.life}} </li>
+            <li> {{x.points}} </li> 
+        </ul>
     </div>
     <div class="right-class col-md-8">
         <div id="board" class="board-class col-md-12">

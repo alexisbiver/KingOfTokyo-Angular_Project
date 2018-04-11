@@ -1,6 +1,45 @@
 var app = angular.module("GameApp", []);
 
-monsterEmotes = ["🐦", "🕷", "🦖", "🐙", "🦍", "🐉", "🦈"]
+app.controller("left", function($scope) {
+    $scope.players = [{
+            "name": "Dragon",
+            "emoji": "🐉",
+            "life": 10,
+            "points": 0,
+        },
+        {
+            "name": "Dinosaur",
+            "emoji": "🦖",
+            "life": 10,
+            "points": 0,
+        },
+        {
+            "name": "Boar",
+            "emoji": "🐗",
+            "life": 10,
+            "points": 0,
+        },
+        {
+            "name": "Gorilla",
+            "emoji": "🦍",
+            "life": 10,
+            "points": 0,
+        },
+        {
+            "name": "Rhinoceros",
+            "emoji": "🦏",
+            "life": 10,
+            "points": 0,
+        },
+        {
+            "name": "Buffalo",
+            "emoji": "🐃",
+            "life": 10,
+            "points": 0,
+        },
+
+    ];
+})
 
 app.controller("bottom", function($scope) {
     $scope.dicesFaces = ["1️⃣", "2️⃣", "3️⃣", "👊", "💵", "❤️"];
@@ -20,17 +59,5 @@ app.controller("bottom", function($scope) {
         if ($scope.nbRolls < 3) {
 
         }
-        for (var i = 0; i < $scope.articles.length; i++) {
-            total += $scope.articles[i].price * $scope.articles[i].quantity;
-        }
-        return total;
-    };
-
-    function calculateDiscount(newValue, oldValue, scope) {
-        $scope.discount = (newValue > 100) ? newValue * 0.10 : 0;
-    };
-
-    $scope.finalTotal = function() {
-        return $scope.total() - $scope.discount;
     };
 });
