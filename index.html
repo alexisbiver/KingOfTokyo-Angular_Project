@@ -21,7 +21,7 @@
         <div class="row"></div>
         <div id="left" ng-controller="left" class="left-class col-md-4">
             <div ng-repeat="x in players">
-                <div class="player row">
+                <div class="player playing-{{x.playing}} row">
                     <div class="col-md-4 playerEmoji">{{x.emoji}}</div>
                     <ul class="col-md-8">
                         <li> {{x.name}} </li>
@@ -43,7 +43,7 @@
                         {{x.face}}
                     </div>
                 </div>
-                <button type=" button col-md-2 " class="btn btn-success " ng-click="roll() "> {{nbRolls}} Roll</button>
+                <button type=" button col-md-2 " class="btn roll btn-success " ng-click="roll() "> {{nbRolls}} Roll</button>
                 <button type="button col-md-1 " class="btn btn-danger " ng-click="changePlayerTurn() ">End Turn</button>
 
             </div>

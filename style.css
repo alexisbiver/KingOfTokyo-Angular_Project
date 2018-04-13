@@ -12,8 +12,8 @@
     min-height: 250px !important;
 }
 
-ul{
-    list-style:none;
+ul {
+    list-style: none;
 }
 
 .bottom-class {
@@ -48,6 +48,7 @@ ul{
 }
 
 .playing-true {
+    border: solid 2px red;
     background-color: white;
 }
 
@@ -61,8 +62,4 @@ ul{
 
 .playerEmoji {
     font-size: 300%;
-}
-
-.currentplayer {
-    border: solid 2px red;
 }
