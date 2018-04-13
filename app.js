@@ -54,10 +54,6 @@ app.controller("game", function($scope) {
 
     $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
 
-    $scope.updateBoard = function() {
-        //TODO : update String Board from game data
-    }
-
 })
 
 
@@ -175,7 +171,7 @@ app.controller("bottom", function($scope) {
 
             }
             //si on est plus de 4 on remplie l'autre emplacement de tokyo
-            if ($scope.playerInTokyo2 == null && $scope.nbPlayers > 4) {
+            if ($scope.playerInTokyo1 != null && $scope.playerInTokyo2 == null && $scope.nbPlayers > 4) {
                 $scope.playerInTokyo2 = $scope.currentPlayer
                 $scope.updateBoard();
                 points += 1;
@@ -216,12 +212,35 @@ app.controller("bottom", function($scope) {
 
     $scope.hitNotTokyo = function(damage) {
         //TODO : hit the players not in tokyo
+        for (var i = 0; i < $scope.nbPlayers; i++){
+            console.log(i)
+            if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2)
+                $scope.players[i].points -= damage
+        }
     }
+
     $scope.hitTokyo = function(damage) {
         //TODO : hit the players in tokyo
+        if ($scope.playerInTokyo1 != null){
+            $scope.playerInTokyo1.points -= damage
+        }
+        if ($scope.playerInTokyo2 != null){
+            $scope.playerInTokyo2.points -= damage
+        }
     }
+    
     $scope.gainPointsFromTokyo = function() {
-        //TODO : make a monster win points after a trun in tokyo
+        //TODO : make a monster win points after a turn in tokyo
+    }
+    $scope.updateBoard = function() {
+        if ($scope.playerInTokyo1 != null){
+            console.log($scope.players[$scope.playerInTokyo1].emoji)
+            $scope.StringBoard += $scope.players[$scope.playerInTokyo1].emoji
+        }
+        if ($scope.playerInTokyo2 != null){ 
+            console.log($scope.players[$scope.playerInTokyo2].emoji)
+            $scope.StringBoard += $scope.players[$scope.playerInTokyo2].emoji
+        }
     }
 
 
