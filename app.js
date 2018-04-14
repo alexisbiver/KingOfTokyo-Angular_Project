@@ -200,8 +200,10 @@ app.controller("bottom", function($scope) {
             $scope.players[$scope.currentPlayer].life = 10;
         }
         if ($scope.players[$scope.currentPlayer].life <= 0) {
-            $scope.players[$scope.currentPlayer].life = 0;
-            $scope.players.remove($scope.currentPlayer);
+            for (var i = 0; i < $scope.nbPlayers; i++) {
+                $scope.players[i].life = 0;
+                $scope.players.splice(i,1); //Supprime 1 élément à partir de l'indice i
+            }
         }
 
         $scope.players[$scope.currentPlayer].points += points;
@@ -213,8 +215,9 @@ app.controller("bottom", function($scope) {
     $scope.hitNotTokyo = function(damage) {
         //TODO : hit the players not in tokyo
         for (var i = 0; i < $scope.nbPlayers; i++) {
-            if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2)
+            if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2){
                 $scope.players[i].life -= damage
+            }
         }
     }
 
@@ -263,7 +266,3 @@ countFaces = function(string, dices) {
     return count;
 }
 
-//Faudrait faire en sorte que le bouton roll au bout de 3 fois devienne "calculer" ou un truc comme ça, dès que tu cliques dessus ça calcule tes points automatiquement (pour ça faut faire une fonction je peux m'en occuper) et quand tu cliques sur end turn tu passes au joueur suivant qu'en penses tu ?
-//Vu
-
-//lol
