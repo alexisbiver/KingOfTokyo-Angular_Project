@@ -47,17 +47,17 @@ ul {
     background-color: green;
 }
 
-.playing-true {
-    border: solid 2px red;
-    background-color: white;
-}
-
 .playing-false {
     background-color: violet;
 }
 
 .player {
     border-bottom: solid 1px black;
+}
+
+.playing-true {
+    border: solid 2px red;
+    background-color: white;
 }
 
 .playerEmoji {

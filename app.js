@@ -170,18 +170,18 @@ app.controller("bottom", function($scope) {
                 points += 1;
 
             }
-            //si on est plus de 4 on remplie l'autre emplacement de tokyo
-            if ($scope.playerInTokyo1 != null && $scope.playerInTokyo2 == null && $scope.nbPlayers > 4) {
+            //si on est plus de 4 on remplis l'autre emplacement de tokyo
+            else if ($scope.playerInTokyo1 != null && $scope.playerInTokyo2 == null && $scope.nbPlayers > 4) {
                 $scope.playerInTokyo2 = $scope.currentPlayer
                 $scope.updateBoard();
                 points += 1;
             }
             //Si on est a Tokyo
-            if ($scope.currentPlayer == $scope.playerInTokyo1 || $scope.currentPlayer == $scope.playerInTokyo2) {
+            else if ($scope.currentPlayer == $scope.playerInTokyo1 || $scope.currentPlayer == $scope.playerInTokyo2) {
                 $scope.hitNotTokyo(counters[3]);
             }
             //Si on est a Tokyo
-            if ($scope.currentPlayer == $scope.playerInTokyo1 || $scope.currentPlayer == $scope.playerInTokyo2) {
+            else if ($scope.currentPlayer == $scope.playerInTokyo1 || $scope.currentPlayer == $scope.playerInTokyo2) {
                 $scope.hitTokyo(counters[3]);
             }
         }
@@ -212,35 +212,42 @@ app.controller("bottom", function($scope) {
 
     $scope.hitNotTokyo = function(damage) {
         //TODO : hit the players not in tokyo
-        for (var i = 0; i < $scope.nbPlayers; i++){
-            console.log(i)
+        for (var i = 0; i < $scope.nbPlayers; i++) {
             if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2)
-                $scope.players[i].points -= damage
+                $scope.players[i].life -= damage
         }
     }
 
     $scope.hitTokyo = function(damage) {
         //TODO : hit the players in tokyo
-        if ($scope.playerInTokyo1 != null){
-            $scope.playerInTokyo1.points -= damage
+        if ($scope.playerInTokyo1 != null) {
+            $scope.players[$scope.playerInTokyo1].life -= damage
+            $scope.goOut($scope.playerInTokyo1);
         }
-        if ($scope.playerInTokyo2 != null){
-            $scope.playerInTokyo2.points -= damage
+        if ($scope.playerInTokyo2 != null) {
+            $scope.players[$scope.playerInTokyo2].life -= damage
+            $scope.goOut($scope.playerInTokyo2)
         }
     }
-    
+
     $scope.gainPointsFromTokyo = function() {
         //TODO : make a monster win points after a turn in tokyo
     }
     $scope.updateBoard = function() {
-        if ($scope.playerInTokyo1 != null){
+        if ($scope.playerInTokyo1 != null) {
             console.log($scope.players[$scope.playerInTokyo1].emoji)
-            $scope.StringBoard += $scope.players[$scope.playerInTokyo1].emoji
+            $scope.StringBoard = $scope.players[$scope.playerInTokyo1].emoji
         }
-        if ($scope.playerInTokyo2 != null){ 
+        if ($scope.playerInTokyo2 != null) {
             console.log($scope.players[$scope.playerInTokyo2].emoji)
-            $scope.StringBoard += $scope.players[$scope.playerInTokyo2].emoji
+            $scope.StringBoard = $scope.players[$scope.playerInTokyo2].emoji
         }
+    }
+
+    $scope.goOut = function(playerInt) {
+        $scope.modalTo = playerInt;
+        $('#ModalCenter').modal('show');
+        console.log("SORS")
     }
 
 
