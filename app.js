@@ -53,7 +53,10 @@ app.controller("game", function($scope) {
     $scope.previousPlayer = null;
     $scope.nbPlayers = 6;
 
-    //  $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
+    $scope.emojisNotInTokyo = []
+    $scope.emojiTokyo1 = "💥";
+    $scope.emojiTokyo2 = "💥";
+
     $scope.victory = function() {
         alert("yeah " + $scope.winner.name + " is the king of tokyo !!!")
     }
@@ -176,14 +179,12 @@ app.controller("bottom", function($scope) {
             //si il n'y a personne a tokyo on rentre
             if ($scope.playerInTokyo1 == null) {
                 $scope.playerInTokyo1 = $scope.currentPlayer
-                $scope.updateBoard();
                 points += 1;
 
             }
             //si on est plus de 4 on remplis l'autre emplacement de tokyo
             else if ($scope.playerInTokyo1 != null && $scope.playerInTokyo2 == null && $scope.nbPlayers > 4) {
                 $scope.playerInTokyo2 = $scope.currentPlayer
-                $scope.updateBoard();
                 points += 1;
             }
             //Si on est a Tokyo
@@ -201,7 +202,6 @@ app.controller("bottom", function($scope) {
         life += counters[5]
 
         $scope.affectPlayer($scope.currentPlayer, points, life);
-        console.log($scope)
     }
 
     $scope.affectPlayer = function(player, points, life) {
@@ -266,17 +266,6 @@ app.controller("bottom", function($scope) {
 
     }
 
-    $scope.updateBoard = function() {
-        if ($scope.playerInTokyo1 != null) {
-            console.log($scope.players[$scope.playerInTokyo1].emoji)
-            $scope.StringBoard = $scope.players[$scope.playerInTokyo1].emoji
-        }
-        if ($scope.playerInTokyo2 != null) {
-            console.log($scope.players[$scope.playerInTokyo2].emoji)
-            $scope.StringBoard = $scope.players[$scope.playerInTokyo2].emoji
-        }
-    }
-
     $scope.goOut = function(playerInt1, playerInt2 = null) {
         $scope.modal1 = playerInt1;
         $('#ModalCenter').modal('show');
@@ -304,18 +293,27 @@ app.controller("bottom", function($scope) {
         }
     }
 
+
     $scope.emojiPlayerNotinTokyo = function() {
         $scope.emojisNotInTokyo = []
+        $scope.emojiTokyo1 = "💥";
+        $scope.emojiTokyo2 = "💥";
         for (var i = 0; i < $scope.nbPlayers; i++) {
             if (i != $scope.playerInTokyo1 && i != $scope.playerInTokyo2) {
-                console.log($scope.playerInTokyo1)
                 $scope.emojisNotInTokyo.push($scope.players[i].emoji)
             }
         }
-        console.log($scope.emojisNotInTokyo)
-        return $scope.emojisNotInTokyo
-    }
+        if ($scope.playerInTokyo1 != null) {
+            $scope.emojiTokyo1 = $scope.players[$scope.playerInTokyo1].emoji;
+            $scope.$parent.emojiTokyo1 = $scope.players[$scope.playerInTokyo1].emoji;
+        }
 
+        if ($scope.playerInTokyo2 != null) {
+            $scope.emojiTokyo2 = $scope.players[$scope.playerInTokyo2].emoji;
+        }
+        console.log($scope.emojiTokyo1)
+        console.log($scope.$parent.$parent.emojiTokyo1)
+    }
     $scope.emojiPlayerNotinTokyo()
 });
 
