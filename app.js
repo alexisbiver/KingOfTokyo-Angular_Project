@@ -50,9 +50,10 @@ app.controller("game", function($scope) {
     $scope.winner = null;
 
     $scope.currentPlayer = 0;
+    $scope.previousPlayer = null;
     $scope.nbPlayers = 6;
 
-//  $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
+    //  $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
     $scope.victory = function() {
         alert("yeah " + $scope.winner.name + " is the king of tokyo !!!")
     }
@@ -102,25 +103,28 @@ app.controller("bottom", function($scope) {
     }
 
     $scope.changePlayerTurn = function() {
-        $scope.players[$scope.currentPlayer].playing = false
-        $scope.resolveDices()
-        if ($scope.currentPlayer == $scope.nbPlayers - 1) {
-            $scope.currentPlayer = 0
-        } else {
-            $scope.currentPlayer += 1
+        if ($scope.nbRolls != 3) {
+            $scope.players[$scope.currentPlayer].playing = false
+            $scope.resolveDices()
+            $scope.previousPlayer = $scope.currentPlayer;
+            if ($scope.currentPlayer == $scope.nbPlayers - 1) {
+                $scope.currentPlayer = 0
+            } else {
+                $scope.currentPlayer += 1
+            }
+            $scope.players[$scope.currentPlayer].playing = true
+            $scope.dices = [
+                { "face": "1️⃣", "locked": false },
+                { "face": "2️⃣", "locked": false },
+                { "face": "3️⃣", "locked": false },
+                { "face": "👊", "locked": false },
+                { "face": "💀", "locked": false },
+                { "face": "❤️", "locked": false }
+            ];
+            $scope.nbRolls = 3;
+            $scope.gainPointsFromTokyo();
+            $scope.emojiPlayerNotinTokyo();
         }
-        $scope.players[$scope.currentPlayer].playing = true
-        $scope.dices = [
-            { "face": "1️⃣", "locked": false },
-            { "face": "2️⃣", "locked": false },
-            { "face": "3️⃣", "locked": false },
-            { "face": "👊", "locked": false },
-            { "face": "💀", "locked": false },
-            { "face": "❤️", "locked": false }
-        ];
-        $scope.nbRolls = 3;
-        $scope.gainPointsFromTokyo();
-        $scope.emojiPlayerNotinTokyo();
     }
 
     $scope.resolveDices = function() {
@@ -233,7 +237,7 @@ app.controller("bottom", function($scope) {
     $scope.hitNotTokyo = function(damage) {
         //TODO : hit the players not in tokyo
         for (var i = 0; i < $scope.nbPlayers; i++) {
-            if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2) {
+            if (i !== $scope.playerInTokyo1 && i !== $scope.playerInTokyo2) {
                 $scope.affectPlayer(i, 0, -damage)
             }
         }
@@ -241,11 +245,14 @@ app.controller("bottom", function($scope) {
 
     $scope.hitTokyo = function(damage) {
         //TODO : hit the players in tokyo
-        if ($scope.playerInTokyo1 != null) {
+        if ($scope.playerInTokyo2 != null && $scope.playerInTokyo1 != null) {
+            $scope.affectPlayer($scope.playerInTokyo2, 0, -damage)
+            $scope.affectPlayer($scope.playerInTokyo1, 0, -damage)
+            $scope.goOut($scope.playerInTokyo1, $scope.playerInTokyo2)
+        } else if ($scope.playerInTokyo1 != null) {
             $scope.affectPlayer($scope.playerInTokyo1, 0, -damage)
             $scope.goOut($scope.playerInTokyo1);
-        }
-        if ($scope.playerInTokyo2 != null) {
+        } else if ($scope.playerInTokyo2 != null) {
             $scope.affectPlayer($scope.playerInTokyo2, 0, -damage)
             $scope.goOut($scope.playerInTokyo2)
         }
@@ -253,7 +260,7 @@ app.controller("bottom", function($scope) {
 
     $scope.gainPointsFromTokyo = function() {
         //TODO : make a monster win points after a turn in tokyo
-        if ($scope.playerInTokyo1 == $scope.currentPlayer || $scope.playerInTokyo2 == $scope.currentPlayer){
+        if ($scope.playerInTokyo1 == $scope.currentPlayer || $scope.playerInTokyo2 == $scope.currentPlayer) {
             $scope.affectPlayer($scope.currentPlayer, 2, 0)
         }
 
@@ -270,23 +277,44 @@ app.controller("bottom", function($scope) {
         }
     }
 
-    $scope.goOut = function(playerInt) {
-        $scope.modalTo = playerInt;
+    $scope.goOut = function(playerInt1, playerInt2 = null) {
+        $scope.modal1 = playerInt1;
         $('#ModalCenter').modal('show');
-        console.log("SORS")
+        if (playerInt2 != null) {
+            $scope.modal2 = playerInt2;
+            $('#SecondModal').modal('show');
+        }
     }
 
-    $scope.emojiPlayerNotinTokyo = function(){
+    $scope.leaveTokyo = function(playerInt) {
+        if ($scope.playerInTokyo1 == playerInt) {
+            if ($scope.playerInTokyo2 != $scope.previousPlayer) {
+                $scope.playerInTokyo1 = $scope.previousPlayer;
+            } else {
+                $scope.playerInTokyo1 = null;
+            }
+            $('#ModalCenter').modal('hide');
+        } else if ($scope.playerInTokyo2 == playerInt) {
+            if ($scope.playerInTokyo1 != $scope.previousPlayer) {
+                $scope.playerInTokyo2 = $scope.previousPlayer;
+            } else {
+                $scope.playerInTokyo2 = null;
+            }
+            $('#SecondModal').modal('hide');
+        }
+    }
+
+    $scope.emojiPlayerNotinTokyo = function() {
         $scope.emojisNotInTokyo = []
         for (var i = 0; i < $scope.nbPlayers; i++) {
             if (i != $scope.playerInTokyo1 && i != $scope.playerInTokyo2) {
                 console.log($scope.playerInTokyo1)
                 $scope.emojisNotInTokyo.push($scope.players[i].emoji)
-            }    
+            }
         }
         console.log($scope.emojisNotInTokyo)
         return $scope.emojisNotInTokyo
-    }  
+    }
 
     $scope.emojiPlayerNotinTokyo()
 });
