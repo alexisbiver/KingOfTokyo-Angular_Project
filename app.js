@@ -53,7 +53,9 @@ app.controller("game", function($scope) {
     $scope.nbPlayers = 6;
 
     $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
-
+    $scope.victory = function() {
+        alert("yeah " + $scope.winner.name + " is the king of tokyo !!!")
+    }
 })
 
 
@@ -181,7 +183,7 @@ app.controller("bottom", function($scope) {
                 $scope.hitNotTokyo(counters[3]);
             }
             //Si on est a Tokyo
-            else if ($scope.currentPlayer == $scope.playerInTokyo1 || $scope.currentPlayer == $scope.playerInTokyo2) {
+            else {
                 $scope.hitTokyo(counters[3]);
             }
         }
@@ -190,33 +192,45 @@ app.controller("bottom", function($scope) {
             //Résolution des coeurs
         life += counters[5]
 
-        $scope.affectPlayer(points, life);
+        $scope.affectPlayer($scope.currentPlayer, points, life);
+        console.log($scope)
     }
 
-    $scope.affectPlayer = function(points, life) {
+    $scope.affectPlayer = function(player, points, life) {
         //update life and points, handle death and victory
-        $scope.players[$scope.currentPlayer].life += life;
-        if ($scope.players[$scope.currentPlayer].life > 10) {
-            $scope.players[$scope.currentPlayer].life = 10;
+        $scope.players[player].life += life;
+        if ($scope.players[player].life > 10) {
+            $scope.players[player].life = 10;
         }
-        if ($scope.players[$scope.currentPlayer].life <= 0) {
+        if ($scope.players[player].life <= 0) {
             for (var i = 0; i < $scope.nbPlayers; i++) {
                 $scope.players[i].life = 0;
-                $scope.players.splice(i,1); //Supprime 1 élément à partir de l'indice i
+                $scope.players.splice(i, 1); //Supprime 1 élément à partir de l'indice i
+                $scope.nbPlayers -= 1;
+                if (i == $scope.playerInTokyo1) {
+                    $scope.playerInTokyo1 == null;
+                } else if (i == $scope.playerInTokyo2) {
+                    $scope.playerInTokyo2 == null;
+                }
+                if ($scope.players.length == 1) {
+                    $scope.winner = $scope.players[0];
+                    $scope.victory();
+                }
             }
         }
 
-        $scope.players[$scope.currentPlayer].points += points;
-        if ($scope.players[$scope.currentPlayer].points >= 20) {
-            $scope.winner = $scope.currentPlayer
+        $scope.players[player].points += points;
+        if ($scope.players[player].points >= 20) {
+            $scope.winner = $scope.players[player]
+            $scope.victory();
         }
     }
 
     $scope.hitNotTokyo = function(damage) {
         //TODO : hit the players not in tokyo
         for (var i = 0; i < $scope.nbPlayers; i++) {
-            if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2){
-                $scope.players[i].life -= damage
+            if (i != $scope.playerInTokyo1 || i != $scope.playerInTokyo2) {
+                $scope.affectPlayer(i, 0, -damage)
             }
         }
     }
@@ -224,11 +238,11 @@ app.controller("bottom", function($scope) {
     $scope.hitTokyo = function(damage) {
         //TODO : hit the players in tokyo
         if ($scope.playerInTokyo1 != null) {
-            $scope.players[$scope.playerInTokyo1].life -= damage
+            $scope.affectPlayer($scope.playerInTokyo1, 0, -damage)
             $scope.goOut($scope.playerInTokyo1);
         }
         if ($scope.playerInTokyo2 != null) {
-            $scope.players[$scope.playerInTokyo2].life -= damage
+            $scope.affectPlayer($scope.playerInTokyo2, 0, -damage)
             $scope.goOut($scope.playerInTokyo2)
         }
     }
@@ -265,4 +279,3 @@ countFaces = function(string, dices) {
     });
     return count;
 }
-
