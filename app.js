@@ -52,10 +52,11 @@ app.controller("game", function($scope) {
     $scope.currentPlayer = 0;
     $scope.nbPlayers = 6;
 
-    $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
+//  $scope.StringBoard = "🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢";
     $scope.victory = function() {
         alert("yeah " + $scope.winner.name + " is the king of tokyo !!!")
     }
+
 })
 
 
@@ -64,6 +65,7 @@ app.controller("left", function($scope) {})
 app.controller("board", function($scope) {
 
 });
+
 app.controller("bottom", function($scope) {
     $scope.dicesFaces = ["1️⃣", "2️⃣", "3️⃣", "👊", "💀", "❤️"];
 
@@ -117,6 +119,8 @@ app.controller("bottom", function($scope) {
             { "face": "❤️", "locked": false }
         ];
         $scope.nbRolls = 3;
+        $scope.gainPointsFromTokyo();
+        $scope.emojiPlayerNotinTokyo();
     }
 
     $scope.resolveDices = function() {
@@ -249,7 +253,12 @@ app.controller("bottom", function($scope) {
 
     $scope.gainPointsFromTokyo = function() {
         //TODO : make a monster win points after a turn in tokyo
+        if ($scope.playerInTokyo1 == $scope.currentPlayer || $scope.playerInTokyo2 == $scope.currentPlayer){
+            $scope.affectPlayer($scope.currentPlayer, 2, 0)
+        }
+
     }
+
     $scope.updateBoard = function() {
         if ($scope.playerInTokyo1 != null) {
             console.log($scope.players[$scope.playerInTokyo1].emoji)
@@ -267,7 +276,19 @@ app.controller("bottom", function($scope) {
         console.log("SORS")
     }
 
+    $scope.emojiPlayerNotinTokyo = function(){
+        $scope.emojisNotInTokyo = []
+        for (var i = 0; i < $scope.nbPlayers; i++) {
+            if (i != $scope.playerInTokyo1 && i != $scope.playerInTokyo2) {
+                console.log($scope.playerInTokyo1)
+                $scope.emojisNotInTokyo.push($scope.players[i].emoji)
+            }    
+        }
+        console.log($scope.emojisNotInTokyo)
+        return $scope.emojisNotInTokyo
+    }  
 
+    $scope.emojiPlayerNotinTokyo()
 });
 
 countFaces = function(string, dices) {

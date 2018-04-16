@@ -34,7 +34,10 @@
 
         <div class="right-class col-md-8">
             <div id="board" ng-controller="board" class="board-class row">
-                {{StringBoard}}
+                 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 <span class= "playerEmoji">💥</span>🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢<span class= "playerEmoji">💥</span>🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢 🏢
+                <div ng-repeat="x in emojiPlayerNotinTokyo">
+                    <div class="col-md-4">{{x}}</div>
+                </div>
             </div>
 
             <div id="bottom" ng-controller="bottom" class="bottom-class row">
