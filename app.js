@@ -291,28 +291,27 @@ app.controller("bottom", function($scope) {
             }
             $('#SecondModal').modal('hide');
         }
+        $scope.emojiPlayerNotinTokyo()
     }
 
 
     $scope.emojiPlayerNotinTokyo = function() {
-        $scope.emojisNotInTokyo = []
-        $scope.emojiTokyo1 = "💥";
-        $scope.emojiTokyo2 = "💥";
+        $scope.$parent.emojisNotInTokyo = []
+        $scope.$parent.emojiTokyo1 = "💥";
+        $scope.$parent.emojiTokyo2 = "💥";
         for (var i = 0; i < $scope.nbPlayers; i++) {
             if (i != $scope.playerInTokyo1 && i != $scope.playerInTokyo2) {
-                $scope.emojisNotInTokyo.push($scope.players[i].emoji)
+                $scope.$parent.emojisNotInTokyo.push($scope.players[i].emoji)
             }
         }
         if ($scope.playerInTokyo1 != null) {
-            $scope.emojiTokyo1 = $scope.players[$scope.playerInTokyo1].emoji;
             $scope.$parent.emojiTokyo1 = $scope.players[$scope.playerInTokyo1].emoji;
         }
 
         if ($scope.playerInTokyo2 != null) {
-            $scope.emojiTokyo2 = $scope.players[$scope.playerInTokyo2].emoji;
+            $scope.$parent.emojiTokyo2 = $scope.players[$scope.playerInTokyo2].emoji;
+
         }
-        console.log($scope.emojiTokyo1)
-        console.log($scope.$parent.$parent.emojiTokyo1)
     }
     $scope.emojiPlayerNotinTokyo()
 });
