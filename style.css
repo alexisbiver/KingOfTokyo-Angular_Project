@@ -1,7 +1,7 @@
 .board-class {
     background-color: cornflowerblue;
     min-width: 200px !important;
-    min-height: 326px !important;
+    min-height: 330px !important;
     font-size: 200%;
     border-left: solid 1px black;
 }
@@ -9,7 +9,8 @@
 .left-class {
     background-color: violet;
     min-width: 100px !important;
-    min-height: 250px !important;
+    min-height: 429px !important;
+    border-left: solid 1px black;
 }
 
 ul {

@@ -5,21 +5,21 @@ app.controller("game", function($scope) {
     $scope.players = [{
             "name": "Dragon",
             "emoji": "🐉",
-            "life": 10,
+            "life": 1,
             "points": 0,
             "playing": true,
         },
         {
             "name": "Dinosaur",
             "emoji": "🦖",
-            "life": 10,
+            "life": 1,
             "points": 0,
             "playing": false,
         },
         {
             "name": "Boar",
             "emoji": "🐗",
-            "life": 10,
+            "life": 1,
             "points": 0,
             "playing": false,
         },
@@ -27,7 +27,7 @@ app.controller("game", function($scope) {
             "name": "Gorilla",
             "emoji": "🦍",
             "life": 10,
-            "points": 0,
+            "points": 19,
             "playing": false,
         },
         {
@@ -50,7 +50,7 @@ app.controller("game", function($scope) {
     $scope.winner = null;
 
     $scope.currentPlayer = 0;
-    $scope.previousPlayer = null;
+    $scope.previousPlayer = 5;
     $scope.nbPlayers = 6;
 
     $scope.emojisNotInTokyo = []
@@ -110,7 +110,7 @@ app.controller("bottom", function($scope) {
             $scope.players[$scope.currentPlayer].playing = false
             $scope.resolveDices()
             $scope.previousPlayer = $scope.currentPlayer;
-            if ($scope.currentPlayer == $scope.nbPlayers - 1) {
+            if ($scope.currentPlayer >= $scope.nbPlayers - 1) {
                 $scope.currentPlayer = 0
             } else {
                 $scope.currentPlayer += 1
@@ -125,6 +125,7 @@ app.controller("bottom", function($scope) {
                 { "face": "❤️", "locked": false }
             ];
             $scope.nbRolls = 3;
+            console.log($scope.players[$scope.currentPlayer].emoji + " is playing")
             $scope.gainPointsFromTokyo();
             $scope.emojiPlayerNotinTokyo();
         }
@@ -174,6 +175,13 @@ app.controller("bottom", function($scope) {
                 points += 3
             }
         }
+        //Résolution des têtes de mort
+        life -= counters[4]
+            //Résolution des coeurs
+        if ($scope.currentPlayer != $scope.playerInTokyo1 || $scope.currentPlayer != $scope.playerInTokyo2) {
+            life += counters[5]
+        }
+
         //Résolution des coups de poing
         if (counters[3] != 0) {
             //si il n'y a personne a tokyo on rentre
@@ -196,10 +204,6 @@ app.controller("bottom", function($scope) {
                 $scope.hitTokyo(counters[3]);
             }
         }
-        //Résolution des têtes de mort
-        life -= counters[4]
-            //Résolution des coeurs
-        life += counters[5]
 
         $scope.affectPlayer($scope.currentPlayer, points, life);
     }
@@ -211,26 +215,31 @@ app.controller("bottom", function($scope) {
             $scope.players[player].life = 10;
         }
         if ($scope.players[player].life <= 0) {
-            for (var i = 0; i < $scope.nbPlayers; i++) {
-                $scope.players[i].life = 0;
-                $scope.players.splice(i, 1); //Supprime 1 élément à partir de l'indice i
-                $scope.nbPlayers -= 1;
-                if (i == $scope.playerInTokyo1) {
-                    $scope.playerInTokyo1 == null;
-                } else if (i == $scope.playerInTokyo2) {
-                    $scope.playerInTokyo2 == null;
-                }
-                if ($scope.players.length == 1) {
-                    $scope.winner = $scope.players[0];
-                    $scope.victory();
-                }
+            console.log("mort de " + $scope.players[player].emoji)
+            $scope.players[player].life = 0;
+            $scope.players.splice(player, 1); //Supprime 1 élément à partir de l'indice i
+            $scope.nbPlayers -= 1;
+            console.log(player + " is in tokyo ?? " + $scope.playerInTokyo1 + "  -or-  " + $scope.playerInTokyo2)
+            if (player == $scope.playerInTokyo1) {
+                $scope.parentplayerInTokyo1 = null;
             }
-        }
-
-        $scope.players[player].points += points;
-        if ($scope.players[player].points >= 20) {
-            $scope.winner = $scope.players[player]
-            $scope.victory();
+            if (player == $scope.playerInTokyo2) {
+                $scope.playerInTokyo2 = null;
+            }
+            if ($scope.players.length == 1) {
+                $scope.$parent.winner = $scope.players[0];
+                $scope.victory();
+            }
+            if (player == $scope.currentPlayer) {
+                $scope.currentPlayer = $scope.previousPlayer;
+            }
+        } else {
+            console.log($scope.players[player].emoji + " gagne des points")
+            $scope.players[player].points += points;
+            if ($scope.players[player].points >= 20) {
+                $scope.$parent.winner = $scope.players[player]
+                $scope.victory();
+            }
         }
     }
 
