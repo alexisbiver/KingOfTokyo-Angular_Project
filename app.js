@@ -1,44 +1,43 @@
 var app = angular.module("GameApp", []);
 
-
 app.controller("game", function($scope) {
     $scope.players = [{
-            "name": "Dragon",
+            "name": "Flame On You",
             "emoji": "🐉",
-            "life": 1,
+            "life": 10,
             "points": 0,
             "playing": true,
         },
         {
-            "name": "Dinosaur",
+            "name": "Mister T",
             "emoji": "🦖",
-            "life": 1,
+            "life": 10,
             "points": 0,
             "playing": false,
         },
         {
-            "name": "Boar",
-            "emoji": "🐗",
-            "life": 1,
+            "name": "Poulpi",
+            "emoji": "🦑",
+            "life": 10,
             "points": 0,
             "playing": false,
         },
         {
-            "name": "Gorilla",
+            "name": "Donkey Boss",
             "emoji": "🦍",
             "life": 10,
-            "points": 19,
+            "points": 0,
             "playing": false,
         },
         {
-            "name": "Rhinoceros",
+            "name": "Impalor",
             "emoji": "🦏",
             "life": 10,
             "points": 0,
             "playing": false,
         },
         {
-            "name": "Buffalo",
+            "name": "Cow Dude",
             "emoji": "🐃",
             "life": 10,
             "points": 0,
@@ -58,17 +57,14 @@ app.controller("game", function($scope) {
     $scope.emojiTokyo2 = "💥";
 
     $scope.victory = function() {
-        alert("yeah " + $scope.winner.name + " is the king of tokyo !!!")
+        $('#VictoryModal').modal('show');
     }
-
 })
 
 
 app.controller("left", function($scope) {})
 
-app.controller("board", function($scope) {
-
-});
+app.controller("board", function($scope) {});
 
 app.controller("bottom", function($scope) {
     $scope.dicesFaces = ["1️⃣", "2️⃣", "3️⃣", "👊", "💀", "❤️"];
@@ -83,6 +79,7 @@ app.controller("bottom", function($scope) {
     ];
 
     $scope.nbRolls = 3;
+    $scope.turnchanged = false;
 
     $scope.roll = function() {
         if ($scope.nbRolls > 0) {
@@ -107,15 +104,7 @@ app.controller("bottom", function($scope) {
 
     $scope.changePlayerTurn = function() {
         if ($scope.nbRolls != 3) {
-            $scope.players[$scope.currentPlayer].playing = false
             $scope.resolveDices()
-            $scope.previousPlayer = $scope.currentPlayer;
-            if ($scope.currentPlayer >= $scope.nbPlayers - 1) {
-                $scope.currentPlayer = 0
-            } else {
-                $scope.currentPlayer += 1
-            }
-            $scope.players[$scope.currentPlayer].playing = true
             $scope.dices = [
                 { "face": "1️⃣", "locked": false },
                 { "face": "2️⃣", "locked": false },
@@ -125,9 +114,9 @@ app.controller("bottom", function($scope) {
                 { "face": "❤️", "locked": false }
             ];
             $scope.nbRolls = 3;
-            console.log($scope.players[$scope.currentPlayer].emoji + " is playing")
             $scope.gainPointsFromTokyo();
             $scope.emojiPlayerNotinTokyo();
+            $scope.turnchanged = false;
         }
     }
 
@@ -204,7 +193,6 @@ app.controller("bottom", function($scope) {
                 $scope.hitTokyo(counters[3]);
             }
         }
-
         $scope.affectPlayer($scope.currentPlayer, points, life);
     }
 
@@ -215,30 +203,58 @@ app.controller("bottom", function($scope) {
             $scope.players[player].life = 10;
         }
         if ($scope.players[player].life <= 0) {
-            console.log("mort de " + $scope.players[player].emoji)
             $scope.players[player].life = 0;
             $scope.players.splice(player, 1); //Supprime 1 élément à partir de l'indice i
             $scope.nbPlayers -= 1;
-            console.log(player + " is in tokyo ?? " + $scope.playerInTokyo1 + "  -or-  " + $scope.playerInTokyo2)
             if (player == $scope.playerInTokyo1) {
-                $scope.parentplayerInTokyo1 = null;
+                $scope.$parent.playerInTokyo1 = null;
+                $scope.playerInTokyo1 = null;
+
             }
             if (player == $scope.playerInTokyo2) {
+                $scope.$parent.playerInTokyo2 = null;
                 $scope.playerInTokyo2 = null;
             }
             if ($scope.players.length == 1) {
                 $scope.$parent.winner = $scope.players[0];
                 $scope.victory();
             }
-            if (player == $scope.currentPlayer) {
-                $scope.currentPlayer = $scope.previousPlayer;
+            //on a pas changé de tour et quelqu'un meurt
+            if ($scope.turnchanged == false) {
+                //C'était le joueur courant
+                if ($scope.currentPlayer >= $scope.nbPlayers) {
+                    $scope.currentPlayer = 0
+                }
+                if ($scope.previousPlayer >= $scope.nbPlayers) {
+                    $scope.previousPlayer = $scope.nbPlayers - 1
+                }
+                $scope.turnchanged = true;
+            }
+            //on a déjà changé de tour et quelqu'un meurt
+            else {
+                $scope.previousPlayer -= 1;
+                $scope.currentPlayer -= 1;
+                if ($scope.currentPlayer <= 0) {
+                    $scope.currentPlayer = 0
+                }
+                if ($scope.previousPlayer <= 0) {
+                    $scope.previousPlayer = 0
+                }
+                $scope.players[$scope.previousPlayer].playing = false
+                $scope.players[$scope.currentPlayer].playing = true
             }
         } else {
-            console.log($scope.players[player].emoji + " gagne des points")
             $scope.players[player].points += points;
             if ($scope.players[player].points >= 20) {
                 $scope.$parent.winner = $scope.players[player]
                 $scope.victory();
+            }
+            if ($scope.turnchanged == false) {
+                $scope.previousPlayer = $scope.currentPlayer;
+                $scope.currentPlayer = $scope.nextPlayer();
+                $scope.players[$scope.previousPlayer].playing = false
+                $scope.players[$scope.currentPlayer].playing = true
+                $scope.turnchanged = true;
             }
         }
     }
@@ -257,12 +273,16 @@ app.controller("bottom", function($scope) {
         if ($scope.playerInTokyo2 != null && $scope.playerInTokyo1 != null) {
             $scope.affectPlayer($scope.playerInTokyo2, 0, -damage)
             $scope.affectPlayer($scope.playerInTokyo1, 0, -damage)
-            $scope.goOut($scope.playerInTokyo1, $scope.playerInTokyo2)
         } else if ($scope.playerInTokyo1 != null) {
             $scope.affectPlayer($scope.playerInTokyo1, 0, -damage)
-            $scope.goOut($scope.playerInTokyo1);
         } else if ($scope.playerInTokyo2 != null) {
             $scope.affectPlayer($scope.playerInTokyo2, 0, -damage)
+        }
+        if ($scope.playerInTokyo2 != null && $scope.playerInTokyo1 != null) {
+            $scope.goOut($scope.playerInTokyo1, $scope.playerInTokyo2)
+        } else if ($scope.playerInTokyo1 != null) {
+            $scope.goOut($scope.playerInTokyo1);
+        } else if ($scope.playerInTokyo2 != null) {
             $scope.goOut($scope.playerInTokyo2)
         }
     }
@@ -272,7 +292,6 @@ app.controller("bottom", function($scope) {
         if ($scope.playerInTokyo1 == $scope.currentPlayer || $scope.playerInTokyo2 == $scope.currentPlayer) {
             $scope.affectPlayer($scope.currentPlayer, 2, 0)
         }
-
     }
 
     $scope.goOut = function(playerInt1, playerInt2 = null) {
@@ -303,7 +322,6 @@ app.controller("bottom", function($scope) {
         $scope.emojiPlayerNotinTokyo()
     }
 
-
     $scope.emojiPlayerNotinTokyo = function() {
         $scope.$parent.emojisNotInTokyo = []
         $scope.$parent.emojiTokyo1 = "💥";
@@ -319,8 +337,35 @@ app.controller("bottom", function($scope) {
 
         if ($scope.playerInTokyo2 != null) {
             $scope.$parent.emojiTokyo2 = $scope.players[$scope.playerInTokyo2].emoji;
-
         }
+    }
+
+    $scope.nextPlayer = function() {
+        var next = null
+        for (var i = 0; i < $scope.nbPlayers; i++) {
+            if ($scope.players[i].playing) {
+                if (i >= $scope.nbPlayers - 1) {
+                    next = 0;
+                } else {
+                    next = i + 1;
+                }
+            }
+        }
+        return next;
+    }
+
+    $scope.previousP = function() {
+        var previous = null
+        for (var i = 0; i < $scope.nbPlayers; i++) {
+            if ($scope.players[i].playing) {
+                if (i <= 0) {
+                    previous = $scope.nbPlayers;
+                } else {
+                    previous = i - 1;
+                }
+            }
+        }
+        return previous;
     }
     $scope.emojiPlayerNotinTokyo()
 });
