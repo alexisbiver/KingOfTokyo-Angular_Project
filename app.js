@@ -104,6 +104,8 @@ app.controller("bottom", function($scope) {
 
     $scope.changePlayerTurn = function() {
         if ($scope.nbRolls != 3) {
+            $scope.turnchanged = false;
+            $scope.players[$scope.currentPlayer].playing = true
             $scope.resolveDices()
             $scope.dices = [
                 { "face": "1️⃣", "locked": false },
@@ -116,7 +118,6 @@ app.controller("bottom", function($scope) {
             $scope.nbRolls = 3;
             $scope.gainPointsFromTokyo();
             $scope.emojiPlayerNotinTokyo();
-            $scope.turnchanged = false;
         }
     }
 
@@ -206,15 +207,28 @@ app.controller("bottom", function($scope) {
             $scope.players[player].life = 0;
             $scope.players.splice(player, 1); //Supprime 1 élément à partir de l'indice i
             $scope.nbPlayers -= 1;
+            //On sort le joueur mort de la ville
             if (player == $scope.playerInTokyo1) {
                 $scope.$parent.playerInTokyo1 = null;
                 $scope.playerInTokyo1 = null;
-
-            }
-            if (player == $scope.playerInTokyo2) {
+            } else if (player == $scope.playerInTokyo2) {
                 $scope.$parent.playerInTokyo2 = null;
                 $scope.playerInTokyo2 = null;
             }
+            //On modifie le numéros des joueurs dans tokyo
+            if ($scope.playerInTokyo2 != null) {
+                $scope.playerInTokyo2 -= 1;
+                if ($scope.playerInTokyo2 < 0) {
+                    $scope.playerInTokyo2 = 0;
+                }
+            }
+            if ($scope.playerInTokyo1 != null) {
+                $scope.playerInTokyo1 -= 1;
+                if ($scope.playerInTokyo1 < 0) {
+                    $scope.playerInTokyo1 = 0;
+                }
+            }
+            //le seul restant est gagnant
             if ($scope.players.length == 1) {
                 $scope.$parent.winner = $scope.players[0];
                 $scope.victory();
@@ -307,6 +321,7 @@ app.controller("bottom", function($scope) {
         if ($scope.playerInTokyo1 == playerInt) {
             if ($scope.playerInTokyo2 != $scope.previousPlayer) {
                 $scope.playerInTokyo1 = $scope.previousPlayer;
+                $scope.affectPlayer($scope.playerInTokyo1, 1, 0)
             } else {
                 $scope.playerInTokyo1 = null;
             }
@@ -314,6 +329,7 @@ app.controller("bottom", function($scope) {
         } else if ($scope.playerInTokyo2 == playerInt) {
             if ($scope.playerInTokyo1 != $scope.previousPlayer) {
                 $scope.playerInTokyo2 = $scope.previousPlayer;
+                $scope.affectPlayer($scope.playerInTokyo2, 1, 0)
             } else {
                 $scope.playerInTokyo2 = null;
             }
